@@ -1,0 +1,10 @@
+# .gitignore
+
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Optional generated Emscripten outputs.
+# Keep these commented for now, because the demo serves them directly.
+# public/calculator.js
+# public/calculator.wasm

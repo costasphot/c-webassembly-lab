@@ -1,0 +1,10 @@
+{
+  "name": "wasm-c-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:wasm": "emcc src/calculator.c -o public/calculator.js -O0 -sNO_EXIT_RUNTIME=1 -sEXPORTED_FUNCTIONS=_main,_AddNumbers,_SubtractNumbers,_MultiplyNumbers,_DivideNumbers",
+    "dev": "npm run build:wasm && cd public && py -m http.server 8000",
+    "build": "npm run build:wasm"
+  }
+}

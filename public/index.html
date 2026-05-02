@@ -1,0 +1,91 @@
+<!-- public/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>C + WebAssembly Demo</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+
+  <body>
+    <main>
+      <h1>C + WebAssembly Demo</h1>
+
+      <p>
+        This page uses JavaScript for the UI and WebAssembly for the calculator logic.
+        The math functions are written in C.
+      </p>
+
+      <div class="form-row">
+        <label for="left-number">Left number:</label>
+        <input id="left-number" type="number" value="20">
+      </div>
+
+      <div class="form-row">
+        <label for="right-number">Right number:</label>
+        <input id="right-number" type="number" value="22">
+      </div>
+
+      <div class="form-row">
+        <label for="operation-select">Operation:</label>
+        <select id="operation-select">
+          <option value="add">Add</option>
+          <option value="subtract">Subtract</option>
+          <option value="multiply">Multiply</option>
+          <option value="divide">Divide</option>
+        </select>
+      </div>
+
+      <button id="calculate-button" type="button" disabled>Calculate in C</button>
+
+      <p id="output">Loading WebAssembly...</p>
+    </main>
+
+    <script>
+      window.Module = {
+        onRuntimeInitialized: function () {
+          const left_number_input = document.getElementById("left-number");
+          const right_number_input = document.getElementById("right-number");
+          const operation_select = document.getElementById("operation-select");
+          const calculate_button = document.getElementById("calculate-button");
+          const output_paragraph = document.getElementById("output");
+
+          function CalculateResult() {
+            const left_number = Number(left_number_input.value);
+            const right_number = Number(right_number_input.value);
+            const operation = operation_select.value;
+
+            let result = 0;
+            let operator_symbol = "";
+
+            if (operation === "add") {
+              result = Module._AddNumbers(left_number, right_number);
+              operator_symbol = "+";
+            } else if (operation === "subtract") {
+              result = Module._SubtractNumbers(left_number, right_number);
+              operator_symbol = "-";
+            } else if (operation === "multiply") {
+              result = Module._MultiplyNumbers(left_number, right_number);
+              operator_symbol = "*";
+            } else if (operation === "divide") {
+              result = Module._DivideNumbers(left_number, right_number);
+              operator_symbol = "/";
+            }
+
+            output_paragraph.textContent =
+              `${left_number} ${operator_symbol} ${right_number} = ${result}`;
+          }
+
+          calculate_button.disabled = false;
+          calculate_button.addEventListener("click", CalculateResult);
+          operation_select.addEventListener("change", CalculateResult);
+
+          CalculateResult();
+        }
+      };
+    </script>
+
+    <script src="./calculator.js"></script>
+  </body>
+</html>
